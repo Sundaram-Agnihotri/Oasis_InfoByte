@@ -1,44 +1,48 @@
-// ===========Typing-annimation================
+let ulTasks = $('#ulTasks')
+let btnAdd = $('#btnAdd')
+let btnReset = $('#btnReset')
+let btnSort = $('#btnSort')
+let btnCleanup = $('#btnCleanup')
+let inpNewTask = $('#inpNewTask')
 
-var typedn = new Typed(".typing", {
-    strings: ["Problem solver", "Web Developer", "Software Developer", "JAVA developer","C++ developer"],
-    typeSpeed: 100,
-    BackSpeed: 50,
-    loop: true
+function addItem() {
+  let listItem = $('<li>', {
+    'class': 'list-group-item',
+    text: inpNewTask.val()
+  })
+  listItem.click(() => {
+    listItem.toggleClass('done')
+  })
+  ulTasks.append(listItem)
+  inpNewTask.val('')
+  toggleInputButtons()
 }
-)
-var typednew = new Typed(".typing-new", {
-    strings: ["Problem Solver", "Web Developer", "Software Developer", "JAVA developer","C++ developer"],
-    typeSpeed: 100,
-    BackSpeed: 40,
-    loop: true
+
+function clearDone() {
+  $('#ulTasks .done').remove()
+  toggleInputButtons()
 }
 
-)
+function sortTasks() {
+  $('#ulTasks .done').appendTo(ulTasks)
+}
 
+function toggleInputButtons() {
+  btnReset.prop('disabled', inpNewTask.val() == '')
+  btnAdd.prop('disabled', inpNewTask.val() == '')
+  btnSort.prop('disabled', ulTasks.children().length < 1)
+  btnCleanup.prop('disabled', ulTasks.children().length < 1)
+}
 
-// ===========Scrool Reval================
-
-ScrollReveal({
-    reset:true,
-    distance:'50px',
-    duration:1000,
-    delay:200
-});
-ScrollReveal().reveal('.home-info',{origin: 'bottom'});
-ScrollReveal().reveal('.hello',{origin: 'left'});
-ScrollReveal().reveal('.home-img',{origin: 'top'});
-ScrollReveal().reveal('.container',{origin: 'bottom'});
-
-
-
-// ===========Toggle-navbar================
-
-let toggleBtn = document.querySelector('.navbar-toggle');
-let sidebar = document.querySelector('.side-bar');
-
-toggleBtn.addEventListener("click",()=>{
-    sidebar.classList.toggle('active');
-    toggleBtn.classList.toggle('navbar-toggle-btn');
-
+inpNewTask.keypress((e) => {
+  if (e.which == 13) addItem()
 })
+inpNewTask.on('input', toggleInputButtons)
+
+btnAdd.click(addItem)
+btnReset.click(() => {
+  inpNewTask.val('')
+  toggleInputButtons()
+})
+btnCleanup.click(clearDone)
+btnSort.click(sortTasks)
